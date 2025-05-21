@@ -46,4 +46,4 @@ Feel free to reach out:
 ## 📝 Notes
 
 - You can still toggle CapsLock in combination with other keys as usual. For example, `Shift + CapsLock` or `Ctrl + CapsLock` will behave the same way as `CapsLock` does when the script is not running.
-- The project icon was generated using the free version of ChatGPT.
+- The project icon was sourced from [SVGRepo](https://www.svgrepo.com/).

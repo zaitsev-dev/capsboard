@@ -5,16 +5,48 @@
 WM_INPUTLANGCHANGEREQUEST := 0x0050
 INPUTLANGCHANGE_FORWARD := 0x0002
 
-; Create tray menu
-A_TrayMenu.Delete()  ; Clear default menu
-A_TrayMenu.Add("Start with Windows", ToggleStartup)
-A_TrayMenu.Add("Exit", ExitScript)
-A_TrayMenu.Default := "Start with Windows"  ; Set default option
+; Registry key for settings
+SETTINGS_KEY := "HKEY_CURRENT_USER\Software\CapsBoard"
 
-; Check if startup is enabled and update menu
-UpdateStartupMenu() {
-    startupEnabled := IsStartupEnabled()
-    A_TrayMenu.Rename("Start with Windows", startupEnabled ? "Disable Startup" : "Enable Startup")
+; Global variable for switching mode
+global useWinSpaceMode := LoadModePreference()
+
+; Function to load mode preference from registry
+LoadModePreference() {
+    try {
+        return RegRead(SETTINGS_KEY, "UseWinSpaceMode") == "1"
+    } catch {
+        return false
+    }
+}
+
+; Function to save mode preference to registry
+SaveModePreference() {
+    try {
+        RegWrite(useWinSpaceMode ? "1" : "0", "REG_SZ", SETTINGS_KEY, "UseWinSpaceMode")
+    } catch as err {
+        MsgBox "Failed to save mode preference: " . err.Message
+    }
+}
+
+; Function to create tray menu
+CreateTrayMenu() {
+    A_TrayMenu.Delete()  ; Clear default menu
+    A_TrayMenu.Add("Start with Windows", ToggleStartup)
+    A_TrayMenu.Add("Alternative Mode", ToggleSwitchMode)
+    if (useWinSpaceMode)
+        A_TrayMenu.Check("Alternative Mode")
+    A_TrayMenu.Add("Exit", ExitScript)
+    A_TrayMenu.Default := "Start with Windows"  ; Set default option
+}
+
+; Function to toggle switching mode
+ToggleSwitchMode(*) {
+    global useWinSpaceMode
+    useWinSpaceMode := !useWinSpaceMode
+    SaveModePreference()
+    CreateTrayMenu()
+    UpdateStartupMenu()
 }
 
 ; Function to toggle startup
@@ -26,6 +58,12 @@ ToggleStartup(*) {
         EnableStartup()
     }
     UpdateStartupMenu()
+}
+
+; Function to check if startup is enabled and update menu
+UpdateStartupMenu() {
+    startupEnabled := IsStartupEnabled()
+    A_TrayMenu.Rename("Start with Windows", startupEnabled ? "Disable Startup" : "Enable Startup")
 }
 
 ; Function to check if startup is enabled
@@ -66,6 +104,12 @@ ExitScript(*) {
 
 ; Function to switch keyboard layout using PostMessage
 SwitchKeyboardLayout() {
+    global useWinSpaceMode
+    if (useWinSpaceMode) {
+        Send "#{Space}"
+        return
+    }
+
     try {
         ; Get the current keyboard layout
         currentLayout := DllCall("GetKeyboardLayout", "UInt", 0, "UInt")
@@ -114,9 +158,6 @@ SwitchKeyboardLayout() {
     }
 }
 
-; Initialize startup menu state
-UpdateStartupMenu()
-
 ; Remap CapsLock to switch keyboard layout
 CapsLock:: {
     SwitchKeyboardLayout()
@@ -126,3 +167,7 @@ CapsLock:: {
 CapsLock Up:: {
     return
 }
+
+; Initialize menu
+CreateTrayMenu()
+UpdateStartupMenu()
