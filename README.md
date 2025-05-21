@@ -7,7 +7,7 @@
 
 ## 🚀 How to Use
 
-1. 📦 Download the pre-compiled executable: `capsboard.exe`
+1. 📦 Download the pre-compiled executable from release page: `capsboard.exe`
 2. 📁 (Optional) Move the file to a safe location so it won’t be deleted accidentally
 3. ▶️ Run the `.exe` file as usual
 4. 📌 Look for the CapsBoard icon in your system tray
