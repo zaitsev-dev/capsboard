@@ -7,13 +7,16 @@
 
 ## 🚀 How to Use
 
-1. 📦 Download the pre-compiled executable from release page: `capsboard.exe`
+1. 📦 Download the pre-compiled executable from the release page: `capsboard.exe`
 2. 📁 (Optional) Move the file to a safe location so it won’t be deleted accidentally
 3. ▶️ Run the `.exe` file as usual
-4. 📌 Look for the CapsBoard icon in your system tray
-5. 🖱️ Right-click the tray icon to open options
-6. 🔁 (Optional) Set the script to run at Windows startup
-7. ❌ Exit the script by right-clicking the icon and selecting **Exit**
+4. 🔀 By default, the script uses a Windows system call to switch the layout.  
+   However, you can enable an **alternative mode** (using `Win + Space`) via the tray icon options.  
+   This mode works more reliably in most cases.
+5. 📌 Look for the CapsBoard icon in your system tray
+6. 🖱️ Right-click the tray icon to open options
+7. 🔁 (Optional) Set the script to run at Windows startup
+8. ❌ Exit the script by right-clicking the icon and selecting **Exit**
 
 
 ## 🐞 Known Bugs
